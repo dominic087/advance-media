@@ -7,3 +7,4 @@
 - `scripts/assets180.py`, `mask3.py` – recortes sin fondo (rembg) y limpieza.
 - `catalogo.md` – especificaciones por modelo.
 - `scripts/historia_entregas.py` – historia semanal "Entregas Advance" (1080×1920, 15 s) con fotos de clientes, recortadas para que no salgan caras; editar `SHOTS` (incluye el recorte) cada semana. Usa `logo-white.png`.
+- `scripts/historia_foto.py` – historias de una sola foto "Entregas Advance" con el lugar de entrega (editar `FOTOS`).
