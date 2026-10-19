@@ -9,23 +9,26 @@ F="/usr/share/fonts/opentype/inter/"
 HERE=os.path.dirname(os.path.abspath(__file__))
 LOGO=os.path.join(HERE,"..","logo-white.png")
 FOT="/mnt/project-files/fotos/entregas/"
-SHOTS=[  # (foto, texto, foco x, foco y)  foco = parte de la foto que se queda al centro
-    ("20260516_195723.jpg", None, 0.55, 0.0),
-    ("20260610_121950.jpg", "Un cliente más estrenando su triciclo", 0.6, 0.6),
-    ("20260509_100328.jpg", "Unidades listas para entregar", 0.5, 0.55),
-    ("WA0080.jpg", "¡Felicidades por su nueva unidad!", 0.5, 0.6),
-    ("20260711_141926.jpg", "Gracias por elegirnos", 0.45, 0.55),
+SHOTS=[  # (foto, texto, recorte x0,y0,x1,y1 en fracción de la foto, foco x, foco y)
+    # El recorte deja fuera las caras de los clientes (Valente 2026-10-19).
+    ("20260516_195723.jpg", None, (0,0.25,1,1), 0.5, 0.5),
+    ("20260610_121950.jpg", "Un cliente más estrenando su triciclo", (0,0.29,1,1), 0.5, 0.5),
+    ("20260509_100328.jpg", "Unidades listas para entregar", (0,0,1,1), 0.5, 0.55),
+    ("WA0080.jpg", "¡Felicidades por su nueva unidad!", (0,0.42,0.8,1), 0.5, 0.5),
+    ("20260711_141926.jpg", "Gracias por elegirnos", (0,0.12,1,1), 0.45, 0.5),
 ]
+PY,RH=440,1020  # zona de la foto: debajo del logo, arriba del texto
 SEG=2.5; FADE=0.4; OUTRO=3.0
 def font(n,s): return ImageFont.truetype(F+n,s)
 
-def load(name, fx, fy, zoom=1.12):
+def load(name, box, fx, fy, zoom=1.12):
     ph=ImageOps.exif_transpose(Image.open(FOT+name)).convert("RGB")
-    r=max(W*zoom/ph.width,H*zoom/ph.height)
+    x0,y0,x1,y1=box; ph=ph.crop((int(x0*ph.width),int(y0*ph.height),int(x1*ph.width),int(y1*ph.height)))
+    r=max(W*zoom/ph.width,RH*zoom/ph.height)
     ph=ph.resize((int(ph.width*r),int(ph.height*r)),Image.LANCZOS)
     return ph,fx,fy
 
-def kb(ph,fx,fy,t,W=W,H=H):  # Ken Burns: zoom lento hacia dentro
+def kb(ph,fx,fy,t,W=W,H=RH):  # Ken Burns: zoom lento hacia dentro
     s=1.0-0.10*t
     cw=int(ph.width*s); ch=int(cw*H/W)
     if ch>ph.height: ch=ph.height; cw=int(ch*W/H)
@@ -45,7 +48,6 @@ logo=Image.open(LOGO).convert("RGBA"); LW=420
 logo=logo.resize((LW,int(logo.height*LW/logo.width)),Image.LANCZOS)
 
 def chrome(im):
-    grad(im,True,560,0.8); grad(im,False,820,0.93)
     im.paste(logo,((W-LW)//2,215),logo)
     d=ImageDraw.Draw(im)
     f=font("Inter-Bold.otf",30); tag="ENTREGAS ADVANCE"; tw=d.textlength(tag,font=f)
@@ -63,18 +65,16 @@ def wrap(d,text,f,maxw):
 
 def caption(im,text):
     d=ImageDraw.Draw(im); f=font("Inter-ExtraBold.otf",72)
-    lines=wrap(d,text,f,W-160); y=1500-len(lines)*88
+    lines=wrap(d,text,f,W-120); y=1500 if len(lines)>1 else 1540
     for ln in lines:
         d.text(((W-d.textlength(ln,font=f))/2,y),ln,font=f,fill=CREAM); y+=88
 
 def intro_text(im):
     d=ImageDraw.Draw(im)
-    f=font("Inter-BlackItalic.otf",132)
-    for i,ln in enumerate(["ENTREGAS","DE LA SEMANA"]):
-        ff=f if i==0 else font("Inter-BlackItalic.otf",88)
-        d.text(((W-d.textlength(ln,font=ff))/2,1230+i*150),ln,font=ff,fill=CREAM)
-    s="Clientes que ya ruedan con Advance"; fs=font("Inter-SemiBold.otf",40)
-    d.text(((W-d.textlength(s,font=fs))/2,1500),s,font=fs,fill=ROSE)
+    for ln,sz,y in [("ENTREGAS",112,1480),("DE LA SEMANA",76,1605)]:
+        ff=font("Inter-BlackItalic.otf",sz); d.text(((W-d.textlength(ln,font=ff))/2,y),ln,font=ff,fill=CREAM)
+    s="Clientes que ya ruedan con Advance"; fs=font("Inter-SemiBold.otf",38)
+    d.text(((W-d.textlength(s,font=fs))/2,1715),s,font=fs,fill=ROSE)
 
 def outro(bgph):
     im=bgph.filter(ImageFilter.GaussianBlur(24))
@@ -93,18 +93,19 @@ def outro(bgph):
     return im
 
 def main(out, prev=None):
-    shots=[load(n,fx,fy) for n,_,fx,fy in SHOTS]
-    texts=[t for _,t,_,_ in SHOTS]
-    out_frame=outro(kb(*shots[0],0.5))
+    shots=[load(n,b,fx,fy) for n,_,b,fx,fy in SHOTS]
+    texts=[t for _,t,_,_,_ in SHOTS]
+    out_frame=outro(kb(*shots[0],0.5,H=H))
     n_main=int(SEG*FPS*len(SHOTS)); n_out=int(OUTRO*FPS); N=n_main+n_out; nf=int(FADE*FPS); seg=int(SEG*FPS)
     def shot_frame(i,k):
-        if texts[i] is None:  # portada: foto debajo del logo para no tapar caras
-            im=Image.new("RGB",(W,H),NAVY); PY=440
-            ph=kb(*shots[i],k/(seg+nf),W=W,H=H-PY); im.paste(ph,(0,PY))
-            band=Image.new("RGB",(W,120),NAVY); m=Image.linear_gradient("L").resize((W,120)).transpose(Image.FLIP_TOP_BOTTOM)
-            im.paste(band,(0,PY),m); chrome(im); intro_text(im); return im
-        im=kb(*shots[i],k/(seg+nf)); chrome(im)
-        if False: pass
+        im=Image.new("RGB",(W,H),NAVY)
+        im.paste(kb(*shots[i],k/(seg+nf)),(0,PY))
+        for top in (True,False):  # fundido de la foto al azul
+            band=Image.new("RGB",(W,140),NAVY); m=Image.linear_gradient("L").resize((W,140))
+            if top: m=m.transpose(Image.FLIP_TOP_BOTTOM)
+            im.paste(band,(0,PY if top else PY+RH-140),m)
+        chrome(im)
+        if texts[i] is None: intro_text(im)
         else: caption(im,texts[i])
         return im
     p=subprocess.Popen(["ffmpeg","-y","-loglevel","error","-f","rawvideo","-pix_fmt","rgb24","-s",f"{W}x{H}","-r",str(FPS),"-i","-",
