@@ -12,7 +12,7 @@ LOGO=os.path.join(HERE,"..","logo-white.png")
 FOT="/mnt/project-files/fotos/entregas/"
 OUT="/mnt/project-files/piezas/entregas/"
 FOTOS=[
-    ("20260516_195723.jpg",(0,0.25,1,1),"...","entrega-1.jpg"),
+    ("20260516_195723.jpg",(0,0.25,1,1),"Tesistán","entrega-1.jpg"),
     ("20260610_121950.jpg",(0,0.29,1,1),"...","entrega-2.jpg"),
     ("20260509_100328.jpg",(0,0,1,1),"...","entrega-3.jpg"),
     ("WA0080.jpg",(0,0.42,0.8,1),"...","entrega-4.jpg"),
