@@ -5,4 +5,5 @@
 - `scripts/fam2.py` – diseño Family en alta resolución (2160×2700).
 - `scripts/esr.py`, `esr180.py` – reescalado con Real-ESRGAN (ncnn, CPU).
 - `scripts/assets180.py`, `mask3.py` – recortes sin fondo (rembg) y limpieza.
+- `scripts/marketplace.py` – imagen cuadrada para Marketplace (vehículo + características + 3 colores), 1080×1080 y HD 2160×2160. Usa recortes sin fondo (rembg isnet) de los videos/posts.
 - `catalogo.md` – especificaciones por modelo.
