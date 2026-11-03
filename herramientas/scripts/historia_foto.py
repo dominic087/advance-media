@@ -14,7 +14,7 @@ OUT="/mnt/project-files/piezas/entregas/"
 FOTOS=[
     ("20260516_195723.jpg",(0,0.25,1,1),"Tesistán","entrega-1.jpg"),
     ("20260610_121950.jpg",(0,0.29,1,1),"Huentitán","entrega-2.jpg"),
-    ("20260509_100328.jpg",(0,0,1,1),"...","entrega-3.jpg"),
+    ("20260509_100328.jpg",(0,0,1,1),"Recolección en el local","entrega-3.jpg"),
     ("WA0080.jpg",(0,0.42,0.8,1),"...","entrega-4.jpg"),
     ("20260711_141926.jpg",(0,0.12,1,1),"...","entrega-5.jpg"),
 ]
@@ -37,7 +37,7 @@ def make(name,box,lugar,out):
     f=font("Inter-Bold.otf",30); tag="ENTREGAS ADVANCE"; tw=d.textlength(tag,font=f)
     d.rounded_rectangle(((W-tw)//2-30,350,(W+tw)//2+30,404),27,fill=BURG); d.text(((W-tw)//2,360),tag,font=f,fill=CREAM)
     yb=1480
-    fl=font("Inter-BlackItalic.otf",76); txt=("ENTREGA EN "+lugar.upper()) if not lugar.lower().startswith("entrega") else lugar.upper()
+    fl=font("Inter-BlackItalic.otf",76); txt=("ENTREGA EN "+lugar.upper()) if not lugar.lower().startswith(("entrega","recolec")) else lugar.upper()
     while d.textlength(txt,font=fl)>W-120: fl=font("Inter-BlackItalic.otf",fl.size-4)
     d.text(((W-d.textlength(txt,font=fl))/2,yb),txt,font=fl,fill=CREAM)
     s="Gracias por su confianza"; fs=font("Inter-SemiBold.otf",38)
