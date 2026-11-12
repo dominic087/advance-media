@@ -189,7 +189,6 @@ def frame(f):
         draw_card(im,cards[name],p,p/L)
         paste_c(im,T('NUESTROS MODELOS',900,64,ROSA),W/2,300,eo(p/8) if sc==3 else 1)
         spd={'FAMILY':'35 KM/H','FAMILY PRO':'40 KM/H','FAMILY PLUS CON TOLDO':'45 KM/H'}[name]
-        paste_c(im,pill(spd,F(58),CREAM,VINO,36,20),W/2+300,420,eback((p-10)/9),1,-6)
         lab=pill(name,fit_text(name,860,92),NAVY,CREAM,48,22)
         paste_c(im,lab,W/2,1415,eback((p-6)/9)*pulse_scale(f))
     elif sc==6:
