@@ -1,6 +1,8 @@
 import sys, math, subprocess
 from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageFilter
-W,H,FPS=1080,1920,30; DUR=20.8; NF=int(DUR*FPS)  # 624
+import json
+TM=json.load(open(sys.argv[1]+'/timing.json'))
+W,H,FPS=1080,1920,30; DUR=TM['dur']; NF=TM['S'][-1]
 BEAT=60/104*FPS  # 17.31 frames
 NAVY=(1,26,93); DEEP=(0,11,46); CREAM=(243,233,210); VINO=(138,44,69); ROSA=(232,169,186); GREEN=(37,211,102); WHITE=(255,255,255)
 FD='/usr/share/fonts/opentype/inter/'
@@ -157,7 +159,7 @@ LOGO_S=logo.resize((420,int(146*420/584)),Image.LANCZOS)
 DATEBAR=pill('DEL 12 AL 16 DE NOVIEMBRE',F(54),CREAM,VINO,56,28)
 FINE=text_img('Promoción válida del 12 al 16 de noviembre o hasta agotar existencias.',F(28,'SemiBold'),CREAM)
 # scene boundaries (frames)
-S=[0,105,210,285,345,405,465,555,NF]
+S=TM['S']
 def frame(f):
     im=background(f).convert('RGBA')
     sc=max(i for i in range(8) if f>=S[i]); p=f-S[sc]; L=S[sc+1]-S[sc]
@@ -185,6 +187,7 @@ def frame(f):
         for k in range(-3,4):
             paste_c(im,g,W/2+((f*4)%120)-60+k*0,860+k*300,1,0.25*clamp(p/6))
         draw_card(im,cards[name],p,p/L)
+        paste_c(im,T('NUESTROS MODELOS',900,64,ROSA),W/2,300,eo(p/8) if sc==3 else 1)
         lab=pill(name,fit_text(name,860,92),NAVY,CREAM,48,22)
         paste_c(im,lab,W/2,1415,eback((p-6)/9)*pulse_scale(f))
     elif sc==6:
@@ -217,7 +220,7 @@ if __name__=='__main__':
         for f in map(int,sys.argv[3].split(',')): frame(f).save(f'{D}/still_{f:03d}.jpg',quality=88)
         sys.exit()
     out=sys.argv[2]
-    p=subprocess.Popen(['ffmpeg','-y','-loglevel','error','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','-','-i',D+'/mix2.wav',
+    p=subprocess.Popen(['ffmpeg','-y','-loglevel','error','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','-','-i',D+'/mix3.wav',
         '-c:v','libx264','-preset','medium','-crf','18','-pix_fmt','yuv420p','-c:a','aac','-b:a','192k','-shortest','-movflags','+faststart',out],stdin=subprocess.PIPE)
     for f in range(NF): p.stdin.write(frame(f).tobytes())
     p.stdin.close(); p.wait()

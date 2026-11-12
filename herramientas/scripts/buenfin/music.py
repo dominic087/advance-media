@@ -1,5 +1,5 @@
 import numpy as np, wave
-SR=44100; BPM=104; B=60/BPM; DUR=20.8
+SR=44100; BPM=104; B=60/BPM; DUR=float(__import__("sys").argv[2]) if len(__import__("sys").argv)>2 else 20.8
 N=int(SR*DUR); out=np.zeros((N,2))
 t_all=np.arange(N)/SR
 def add(sig,start,pan=0.0,g=1.0):
