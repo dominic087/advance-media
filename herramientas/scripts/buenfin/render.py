@@ -83,8 +83,8 @@ def photo_card(path,crop_box_frac=None,cw=900,ch=1000):
     return im.resize((int(cw*1.15),int(ch*1.15)),Image.LANCZOS)
 cards={
  'FAMILY':photo_card(PF+'buenfin/family/2.jpg'),
- 'FAMILY Q':photo_card(PF+'semana2/fq1.jpg'),
- 'FAMILY PLUS CON TOLDO':photo_card(PF+'semana2/fpt3.jpg'),
+ 'FAMILY Y PRO':photo_card(PF+'semana2/fq1.jpg'),
+ 'FAMILY PLUS CON TOLDO':photo_card(PF+'semana3/toldo/181032.jpg'),
 }
 CW,CH=900,1000
 def draw_card(base,src,p,fl):
@@ -151,7 +151,7 @@ def calendar(sz_w=760):
         d.ellipse([cx-58,cy-58,cx+58,cy+58],fill=NAVY)
         s=str(day); tw,th,b=tsize(s,fd); d.text((cx-tw/2-b[0],cy-th/2-b[1]),s,font=fd,fill=CREAM)
     return im
-CAL=calendar()
+_bf=Image.open(D+'/buenfin_cal.png').convert('RGBA'); CAL=_bf.resize((780,int(_bf.height*780/_bf.width)),Image.LANCZOS)
 # ---- fixed elements
 LOGO_S=logo.resize((420,int(146*420/584)),Image.LANCZOS)
 DATEBAR=pill('DEL 12 AL 16 DE NOVIEMBRE',F(54),CREAM,VINO,56,28)
@@ -163,8 +163,8 @@ def frame(f):
     sc=max(i for i in range(8) if f>=S[i]); p=f-S[sc]; L=S[sc+1]-S[sc]
     showbar=sc not in (2,)
     if sc==0:
-        cp=ebounce(p/22); paste_c(im,CAL,W/2,-500+(860+500)*cp,1,1,(1-eo(p/22))*8)
-        if p>=26: echo(im,'PREPÁRATE',1360,26,f,size=180)
+        cp=ebounce(p/22); paste_c(im,CAL,W/2,-500+(800+500)*cp,1,1,(1-eo(p/22))*8)
+        if p>=26: echo(im,'PREPÁRATE',1330,26,f,size=180)
     elif sc==1:
         a=eback(p/10,1.5); paste_c(im,T('COMPRA',980,190,CREAM),W/2-(1-a)*1100,560,pulse_scale(f))
         a=eback((p-5)/10,1.5); paste_c(im,T('TU UNIDAD',980,170,ROSA),W/2+(1-a)*1100,760,pulse_scale(f))
@@ -179,7 +179,7 @@ def frame(f):
         paste_c(im,T('DEL 12 AL 16',980,170,CREAM),W/2,1000,a*pulse_scale(f))
         paste_c(im,T('DE NOVIEMBRE',980,140,ROSA),W/2,1190,eback((q-4)/10))
     elif sc in (3,4,5):
-        name=['FAMILY','FAMILY Q','FAMILY PLUS CON TOLDO'][sc-3]
+        name=['FAMILY','FAMILY Y PRO','FAMILY PLUS CON TOLDO'][sc-3]
         # echo name behind card
         g=T(name,1000,220 if sc<5 else 150,(0,0,0,0),stroke=3,sfill=ROSA)
         for k in range(-3,4):
@@ -217,7 +217,7 @@ if __name__=='__main__':
         for f in map(int,sys.argv[3].split(',')): frame(f).save(f'{D}/still_{f:03d}.jpg',quality=88)
         sys.exit()
     out=sys.argv[2]
-    p=subprocess.Popen(['ffmpeg','-y','-loglevel','error','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','-','-i',D+'/music.wav',
+    p=subprocess.Popen(['ffmpeg','-y','-loglevel','error','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','-','-i',D+'/mix2.wav',
         '-c:v','libx264','-preset','medium','-crf','18','-pix_fmt','yuv420p','-c:a','aac','-b:a','192k','-shortest','-movflags','+faststart',out],stdin=subprocess.PIPE)
     for f in range(NF): p.stdin.write(frame(f).tobytes())
     p.stdin.close(); p.wait()
