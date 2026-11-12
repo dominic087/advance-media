@@ -85,7 +85,7 @@ def photo_card(path,crop_box_frac=None,cw=900,ch=1000):
     return im.resize((int(cw*1.15),int(ch*1.15)),Image.LANCZOS)
 cards={
  'FAMILY':photo_card(PF+'buenfin/family/2.jpg'),
- 'FAMILY Y PRO':photo_card(PF+'semana2/fq1.jpg'),
+ 'FAMILY PRO':photo_card(PF+'semana2/fq1.jpg'),
  'FAMILY PLUS CON TOLDO':photo_card(PF+'semana3/toldo/181032.jpg'),
 }
 CW,CH=900,1000
@@ -181,7 +181,7 @@ def frame(f):
         paste_c(im,T('DEL 12 AL 16',980,170,CREAM),W/2,1000,a*pulse_scale(f))
         paste_c(im,T('DE NOVIEMBRE',980,140,ROSA),W/2,1190,eback((q-4)/10))
     elif sc in (3,4,5):
-        name=['FAMILY','FAMILY Y PRO','FAMILY PLUS CON TOLDO'][sc-3]
+        name=['FAMILY','FAMILY PRO','FAMILY PLUS CON TOLDO'][sc-3]
         # echo name behind card
         g=T(name,1000,220 if sc<5 else 150,(0,0,0,0),stroke=3,sfill=ROSA)
         for k in range(-3,4):
