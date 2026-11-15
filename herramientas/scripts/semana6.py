@@ -13,3 +13,7 @@ make(b, O + "beta.jpg", "BETA", "LIGERA, ÁGIL Y CON CANASTILLA",
      [("500 W", "MOTOR"), ("30 km/h", "VEL. MÁXIMA"), ("35 km", "AUTONOMÍA"), G], cy=0.72, cx=0.55, zoom=1.3)
 make(load(B + "semana6/tf1.jpg"), O + "family.jpg", "FAMILY", "EL CLÁSICO PARA TODA LA FAMILIA",
      [("600 W", "MOTOR"), ("35 km/h", "VEL. MÁXIMA"), ("40 km", "AUTONOMÍA"), G], cy=0.6, cx=0.5)
+# Rayo y Magic (sin ficha técnica confirmada: solo garantía, refacciones y asistencia, que incluyen todos los modelos)
+X = [("1 AÑO", "GARANTÍA ELÉCTRICA"), ("REFACCIONES", "DISPONIBLES"), ("ASISTENCIA", "TELEFÓNICA")]
+make(load(B + "semana6/rayo3-limpia.jpg"), O + "rayo.jpg", "RAYO", "BICIMOTO ELÉCTRICA", X, cy=0.0, cx=0.35, zoom=0.9)
+make(load(B + "semana6/magic1.jpg"), O + "magic.jpg", "MAGIC", "TRICICLO ELÉCTRICO", X, cy=0.6, cx=0.5)
