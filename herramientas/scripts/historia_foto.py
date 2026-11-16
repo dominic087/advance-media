@@ -8,14 +8,14 @@ NAVY=(1,26,93); DEEP=(0,11,46); CREAM=(243,233,210); BURG=(138,44,69); ROSE=(232
 W,H=1080,1920
 F="/usr/share/fonts/opentype/inter/"
 HERE=os.path.dirname(os.path.abspath(__file__))
-LOGO=os.path.join(HERE,"..","logo-white.png")
+LOGO=os.path.join(HERE,"logo-white.png")
 FOT="/mnt/project-files/fotos/entregas/"
 OUT="/mnt/project-files/piezas/entregas/"
 FOTOS=[
     ("20260516_195723.jpg",(0,0.25,1,1),"Tesistán","entrega-1.jpg"),
     ("20260610_121950.jpg",(0,0.29,1,1),"Huentitán","entrega-2.jpg"),
     ("20260509_100328.jpg",(0,0,1,1),"Recolección en el local","entrega-3.jpg"),
-    ("WA0080.jpg",(0,0.42,0.8,1),"...","entrega-4.jpg"),
+    ("WA0080.jpg",(0,0.42,0.8,1),"Ocotlán","entrega-4.jpg"),
     ("20260711_141926.jpg",(0,0.12,1,1),"...","entrega-5.jpg"),
 ]
 def font(n,s): return ImageFont.truetype(F+n,s)
